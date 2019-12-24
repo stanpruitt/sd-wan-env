@@ -21,6 +21,8 @@ class vSwitch(vdevs.basevdev.BasevDev):
         pass
 
     def addintf(self, intf):
+        if len(self._ifs) == 0:
+            self.access(self._name)
         if intf in self._ifs:
             return
         sp = subprocess.run(["brctl", "addif", self._name, intf])

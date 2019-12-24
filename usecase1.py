@@ -15,22 +15,48 @@ class UseCase1(baseusecase.BaseUseCase):
         self._vmnat.config(imagebase + "nat.qcow2", m=1024)
         self._vmnat.addnetwork(["-netdev", "user,id=net0001,hostfwd=tcp::10001-:22",
                                 "-device", "e1000,netdev=net0001,mac=52:54:98:76:00:01"])
-        self._vmnat.addnetwork(["-netdev", "tap,id=net0002",
+        self._vmnat.addnetwork(["-netdev", "tap,id=net0002,ifname=tap0002",
                                 "-device", "e1000,netdev=net0002,mac=52:54:98:76:00:02"])
-        self._vmnat.addnetwork(["-netdev", "tap,id=net0003",
+        self._vmnat.addnetwork(["-netdev", "tap,id=net0003,ifname=tap0003",
                                 "-device", "e1000,netdev=net0003,mac=52:54:98:76:00:03"])
+
+        self._vmthinedge = vdevs.vm.VM("thinedge")
+        self._vmthinedge.config(imagebase + "thinedge.qcow2", m=1024)
+        self._vmthinedge.addnetwork(["-netdev", "user,id=net0101,hostfwd=tcp::10101-:22",
+                                "-device", "e1000,netdev=net0101,mac=52:54:98:76:01:01"])
+        self._vmthinedge.addnetwork(["-netdev", "tap,id=net0102,ifname=tap0102",
+                                "-device", "e1000,netdev=net0102,mac=52:54:98:76:01:02"])
+        self._vmthinedge.addnetwork(["-netdev", "tap,id=net0103,ifname=tap0103",
+                                "-device", "e1000,netdev=net0103,mac=52:54:98:76:01:03"])
+
+        self._vmfatedge = vdevs.vm.VM("fatedge")
+        self._vmfatedge.config(imagebase + "fatedge.qcow2", m=1024)
+        self._vmfatedge.addnetwork(["-netdev", "user,id=net0201,hostfwd=tcp::10201-:22",
+                                "-device", "e1000,netdev=net0201,mac=52:54:98:76:02:01"])
+        self._vmfatedge.addnetwork(["-netdev", "tap,id=net0202,ifname=tap0202",
+                                "-device", "e1000,netdev=net0202,mac=52:54:98:76:02:02"])
+
+
+
+        pass
+
+    def link(self):
+        self._localswitch.addintf("tap0003")
+        self._publicgw.addintf("tap0002")
+        self._localswitch.addintf("tap0103")
+        self._publicgw.addintf("tap0202")
 
         pass
 
     def start(self):
         self._localswitch.start()
-        self._localswitch.addintf("tap0")
-        self._localswitch.addintf("tap1")
         print (self._localswitch.getintfs())
 
         self._publicgw.start()
 
         self._vmnat.start()
+        self._vmthinedge.start()
+        self._vmfatedge.start()
 
         pass
 
@@ -38,10 +64,14 @@ class UseCase1(baseusecase.BaseUseCase):
         self._localswitch.stop()
         self._publicgw.stop()
         self._vmnat.stop()
+        self._vmthinedge.stop()
+        self._vmfatedge.stop()
         pass
 
     def remove(self):
         self._localswitch.remove()
         self._publicgw.remove()
         self._vmnat.remove()
+        self._vmthinedge.remove()
+        self._vmfatedge.remove()
         pass

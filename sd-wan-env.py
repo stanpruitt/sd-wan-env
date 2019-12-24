@@ -18,5 +18,7 @@ if __name__ == "__main__":
         usecase.test()
     elif args.command == "graph":
         usecase.graph()
+    elif args.command == "link":
+        usecase.link()
     else:
         print ("unknown command")

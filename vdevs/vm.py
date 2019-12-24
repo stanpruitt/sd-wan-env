@@ -26,6 +26,12 @@ class VM(vdevs.basevdev.BasevDev):
 
     def start(self):
         # try access at first
+        sp = subprocess.run(["ps", "-f", "-C", "qemu-system-x86_64"], stdout=subprocess.PIPE)
+        lines = sp.stdout.splitlines()
+        for line in lines:
+            if self._image in line.decode():
+                return
+        self.create()
         pass
 
     def create(self):
@@ -41,5 +47,12 @@ class VM(vdevs.basevdev.BasevDev):
         pass
 
     def remove(self):
-
+        sp = subprocess.run(["ps", "-f", "-C", "qemu-system-x86_64"], stdout=subprocess.PIPE)
+        lines = sp.stdout.splitlines()
+        for line in lines:
+            if self._image in line.decode():
+                items = line.split()
+                print (items[1])
+                subprocess.run(["kill", items[1].decode()])
+                return
         pass

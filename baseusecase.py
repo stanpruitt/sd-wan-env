@@ -21,3 +21,7 @@ class BaseUseCase:
     def graph(self):
         print("TODO")
         pass
+
+    def link(self):
+        print("TODO")
+        pass
