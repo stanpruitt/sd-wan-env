@@ -35,9 +35,6 @@ class UseCase1(baseusecase.BaseUseCase):
                                 "-device", "e1000,netdev=net0201,mac=52:54:98:76:02:01"])
         self._vmfatedge.addnetwork(["-netdev", "tap,id=net0202,ifname=tap0202",
                                 "-device", "e1000,netdev=net0202,mac=52:54:98:76:02:02"])
-
-
-
         pass
 
     def link(self):
@@ -46,6 +43,15 @@ class UseCase1(baseusecase.BaseUseCase):
         self._localswitch.addintf("tap0103")
         self._publicgw.addintf("tap0202")
 
+        netdata = "/home/richard/PycharmProjects/sd-wan-env/data/dhcpd/data/"
+        self._publicgw.set_dhcpserver(netdata)
+        gw = self.parsegw(netdata)
+        self._publicgw.set_NAT(gw)
+        pass
+
+    def test(self):
+        self._publicgw.remove_dhcpserver()
+        self._publicgw.remove_NAT()
         pass
 
     def start(self):
@@ -69,9 +75,23 @@ class UseCase1(baseusecase.BaseUseCase):
         pass
 
     def remove(self):
+        self._publicgw.remove_dhcpserver()
+        self._publicgw.remove_NAT()
+
         self._localswitch.remove()
         self._publicgw.remove()
         self._vmnat.remove()
         self._vmthinedge.remove()
         self._vmfatedge.remove()
         pass
+
+    def parsegw(self, cfgdata):
+        cfg = cfgdata + "/dhcpd.conf"
+        with open(cfg) as f:
+            lines = f.readlines()
+            for line in lines:
+                if "option" not in line or "routers" not in line:
+                    continue
+                items = line.split()
+                return (items[2].strip(";").strip())
+        raise Exception("invalid dhcp server config file")
