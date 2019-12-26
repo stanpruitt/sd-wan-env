@@ -8,6 +8,8 @@ sudo python3 nat-env.py start
 sudo python3 nat-env.py link
 
 ssh to thinedge to start gw:
+sudo python3 thinedge-env.py start
+sudo python3 thinedge-env.py link
 
 
 thinedge:
