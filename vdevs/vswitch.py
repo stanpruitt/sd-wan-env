@@ -24,6 +24,8 @@ class vSwitch(vdevs.basevdev.BasevDev):
         if not exist:
             subprocess.run(["iptables", "-A", "FORWARD", "-i", self._name, "-j", "ACCEPT"])
             subprocess.run(["iptables", "-A", "FORWARD", "-o", self._name, "-j", "ACCEPT"])
+        #patch, the bridge interface should be up
+        subprocess.run(["ip", "link", "set", self._name, "up"])
         pass
 
     def remove(self):

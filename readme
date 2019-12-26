@@ -1,0 +1,37 @@
+
+sudo python3 sd-wan-env.py start
+sudo python3 sd-wan-env.py link
+
+ssh to natvm to start gw:
+ssh -p 10001 127.0.0.1
+sudo python3 nat-env.py start
+sudo python3 nat-env.py link
+
+ssh to thinedge to start gw:
+
+
+thinedge:
+ssh -p 10101 127.0.0.1
+
+natvm:
+ssh -p 10001 127.0.0.1
+
+fatedge:
+ssh -p 10201 127.0.0.1
+
+
+
+Check:
+fatedge ping www.baidu.com through 10.27.1.1
+natvm ping www.baidu.com through 10.27.1.1
+thinedge ping www.baidu.com through 10.117.1.1
+
+from virtual hosts under thinedge to perform ping
+
+
+To fix:
+1. natvm and fatedge get same ip address? should I give fatedge a fix ip address?
+
+
+Note:
+1. 
