@@ -4,7 +4,8 @@ import usecase1
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", help="start stop remove test graph")
+    parser.add_argument("command", help="start stop remove test graph addhost")
+    parser.add_argument("nic", nargs="?", help="attach host to a nic interface")
     args = parser.parse_args()
 
     usecase = usecase1.UseCase1()
@@ -20,5 +21,7 @@ if __name__ == "__main__":
         usecase.graph()
     elif args.command == "link":
         usecase.link()
+    elif args.command == "addhost":
+        usecase.addhost(args.nic)
     else:
         print ("unknown command")

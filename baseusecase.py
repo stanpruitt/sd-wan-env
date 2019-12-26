@@ -25,3 +25,7 @@ class BaseUseCase:
     def link(self):
         print("TODO")
         pass
+
+    def addhost(self, intfname):
+        print("TODO")
+        pass

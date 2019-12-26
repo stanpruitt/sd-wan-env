@@ -2,6 +2,7 @@ import baseusecase
 import vdevs.vswitch
 import vdevs.vgateway
 import vdevs.vm
+import vdevs.vhost
 
 class UseCase1(baseusecase.BaseUseCase):
     def __init__(self):
@@ -95,3 +96,8 @@ class UseCase1(baseusecase.BaseUseCase):
                 items = line.split()
                 return (items[2].strip(";").strip())
         raise Exception("invalid dhcp server config file")
+
+    def addhost(self, intfname):
+        host = vdevs.vhost.vHost(intfname)
+        host.start()
+        pass
