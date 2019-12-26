@@ -12,6 +12,18 @@ class vSwitch(vdevs.basevdev.BasevDev):
             self.access(self._name)
         except vdevs.basevdev.ExceptionNotExist:
             self.create(self._name)
+
+        #patch, iptable forward rule will affect bridge performs
+        exist = False
+        sp = subprocess.run(["iptables", "-L", "FORWARD", "-v", "--line-numbers"], stdout=subprocess.PIPE)
+        lines = sp.stdout.splitlines()
+        for line in reversed(lines):
+            lstr = line.decode()
+            if self._name in lstr and "ACCEPT" in lstr:
+                exist = True
+        if not exist:
+            subprocess.run(["iptables", "-A", "FORWARD", "-i", self._name, "-j", "ACCEPT"])
+            subprocess.run(["iptables", "-A", "FORWARD", "-o", self._name, "-j", "ACCEPT"])
         pass
 
     def remove(self):

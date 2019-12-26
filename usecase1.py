@@ -50,8 +50,8 @@ class UseCase1(baseusecase.BaseUseCase):
         pass
 
     def test(self):
-        self._publicgw.remove_dhcpserver()
-        self._publicgw.remove_NAT()
+#        self._publicgw.remove_dhcpserver()
+#        self._publicgw.remove_NAT()
         pass
 
     def start(self):
