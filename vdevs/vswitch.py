@@ -32,6 +32,13 @@ class vSwitch(vdevs.basevdev.BasevDev):
         sp = subprocess.run(["ip", "link", "show", self._name, "type", "bridge"])
         if sp.returncode == 0:
             sp = subprocess.run(["ip", "link", "delete", self._name, "type", "bridge"])
+
+        sp = subprocess.run(["iptables", "-L", "FORWARD", "--line-numbers", "-v"], stdout = subprocess.PIPE)
+        lines = reversed(sp.stdout.splitlines())
+        for line in lines:
+            if self._name in line.decode():
+                id = (line.decode().split()[0])
+                subprocess.run(["iptables", "-D", "FORWARD", id])
         pass
 
     def addintf(self, intf):
@@ -42,6 +49,7 @@ class vSwitch(vdevs.basevdev.BasevDev):
         sp = subprocess.run(["brctl", "addif", self._name, intf])
         if sp.returncode != 0:
             raise Exception("can not add interface to bridge")
+        subprocess.run(["ifconfig", intf, "up"])
         self._ifs.add(intf)
         pass
 

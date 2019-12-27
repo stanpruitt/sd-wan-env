@@ -11,6 +11,9 @@ ssh to thinedge to start gw:
 sudo python3 thinedge-env.py start
 sudo python3 thinedge-env.py link
 
+add/remove host
+sudo python3 sd-wan-env.py addhost tap0102 host
+sudo python3 sd-wan-env.py removehost tap0102 host
 
 thinedge:
 ssh -p 10101 127.0.0.1

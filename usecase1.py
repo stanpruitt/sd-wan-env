@@ -97,7 +97,12 @@ class UseCase1(baseusecase.BaseUseCase):
                 return (items[2].strip(";").strip())
         raise Exception("invalid dhcp server config file")
 
-    def addhost(self, intfname):
-        host = vdevs.vhost.vHost(intfname)
+    def addhost(self, intfname, hostname):
+        host = vdevs.vhost.vHost(intfname, hostname)
         host.start()
+        pass
+
+    def removehost(self, intfname, hostname):
+        host = vdevs.vhost.vHost(intfname, hostname)
+        host.remove()
         pass
