@@ -33,9 +33,9 @@ class FatEdge(baseusecase.BaseUseCase):
         sp = subprocess.run(["ip", "tuntap", "add", "mode", "tun", "tun13"])
         if sp.returncode != 0:
             raise Exception("can not create tuntap")
-        sp = subprocess.run(["ifconfig", "tun13", "up"])
-        self._gw.addintf("tun13")
-        sp = subprocess.run(["simpletun", "-i", "tun13", "-s", "-p", "5555", "-d"])
+        sp = subprocess.run(["ifconfig", "tun13", "10.10.0.1", "up"])
+#        self._gw.addintf("tun13")
+        sp = subprocess.run(["/home/richard/work/diyvpn/simpletun", "-i", "tun13", "-s", "-p", "5555", "-d"])
         pass
 
     def test(self):
