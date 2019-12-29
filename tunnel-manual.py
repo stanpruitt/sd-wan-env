@@ -6,11 +6,11 @@ import subprocess
 class ThinEdge(baseusecase.BaseUseCase):
     def __init__(self):
         super().__init__()
-        self._gw = vdevs.vgateway.vGateway("gw2")
+#        self._gw = vdevs.vgateway.vGateway("gw2")
         pass
 
     def start(self):
-        self._gw.start()
+#        self._gw.start()
         sp = subprocess.run(["ip", "tuntap", "add", "mode", "tun", "tun13"])
         if sp.returncode != 0:
             raise Exception("can not create tuntap")
@@ -26,18 +26,18 @@ class ThinEdge(baseusecase.BaseUseCase):
 
     def remove(self):
         sp = subprocess.run(["ip", "tuntap", "del", "mode", "tun", "tun13"])
-        self._gw.remove()
+#        self._gw.remove()
         pass
 
 
 class FatEdge(baseusecase.BaseUseCase):
     def __init__(self):
         super().__init__()
-        self._gw = vdevs.vgateway.vGateway("gw")
+#        self._gw = vdevs.vgateway.vGateway("gw")
         pass
 
     def start(self):
-        self._gw.start()
+#        self._gw.start()
         sp = subprocess.run(["ip", "tuntap", "add", "mode", "tun", "tun13"])
         if sp.returncode != 0:
             raise Exception("can not create tuntap")
@@ -52,7 +52,7 @@ class FatEdge(baseusecase.BaseUseCase):
 
     def remove(self):
         sp = subprocess.run(["ip", "tuntap", "del", "mode", "tun", "tun13"])
-        self._gw.remove()
+#        self._gw.remove()
         pass
 
 
