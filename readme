@@ -36,10 +36,47 @@ sudo python3 sd-wan-env.py addhost tap0203 host
 docker exec -it host_tap0203 /bin/bash
 ping 8.8.8.8
 
+------------------------------
+create tunnel
+fatedge:
+sudo python3 tunnel-manual.py fatedge start
+
+thinedge:
+sudo python3 tunnel-manual.py thinedge start
+sudo ip route add 172.16.117.0/24 via 10.10.0.1
+
+from host_tap0102 ping 172.16.117.50,
+
 
 Destroy:
 sudo python3 sd-wan-env.py removehost tap0102 host
+sudo python3 sd-wan-env.py removehost tap0203 host
+
+for thinedge and fatedge,
+sudo python3 tunnel-manual.py thinedge|fatedge remove
+
+for thinedge, nat-vm, fatedge
+sudo python3 xxxedge-env.py remove
+
+
+
 sudo python3 sd-wan-env.py remove
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
