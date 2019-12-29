@@ -6,11 +6,18 @@ import subprocess
 class ThinEdge(baseusecase.BaseUseCase):
     def __init__(self):
         super().__init__()
-        self._gw = vdevs.vgateway.vGateway("gw")
+        self._gw = vdevs.vgateway.vGateway("gw2")
         pass
 
     def start(self):
         self._gw.start()
+        sp = subprocess.run(["ip", "tuntap", "add", "mode", "tun", "tun13"])
+        if sp.returncode != 0:
+            raise Exception("can not create tuntap")
+        sp = subprocess.run(["ip", "addr", "add", "10.10.0.100/24", "dev", "tun13"])
+        sp = subprocess.run(["ip", "link", "set", "tun13", "up"])
+#        self._gw.addintf("tun13")
+        sp = subprocess.run(["/home/richard/work/diyvpn/simpletun", "-i", "tun13", "-c", "10.27.1.101", "-p", "5555", "-d"])
         pass
 
     def test(self):
@@ -18,6 +25,7 @@ class ThinEdge(baseusecase.BaseUseCase):
         pass
 
     def remove(self):
+        sp = subprocess.run(["ip", "tuntap", "del", "mode", "tun", "tun13"])
         self._gw.remove()
         pass
 
@@ -33,7 +41,7 @@ class FatEdge(baseusecase.BaseUseCase):
         sp = subprocess.run(["ip", "tuntap", "add", "mode", "tun", "tun13"])
         if sp.returncode != 0:
             raise Exception("can not create tuntap")
-        sp = subprocess.run(["ifconfig", "tun13", "10.10.0.1", "up"])
+        sp = subprocess.run(["ip", "addr", "add", "10.10.0.1/24", "dev", "tun13"])
 #        self._gw.addintf("tun13")
         sp = subprocess.run(["/home/richard/work/diyvpn/simpletun", "-i", "tun13", "-s", "-p", "5555", "-d"])
         pass
