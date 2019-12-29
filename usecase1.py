@@ -36,6 +36,8 @@ class UseCase1(baseusecase.BaseUseCase):
                                 "-device", "e1000,netdev=net0201,mac=52:54:98:76:02:01"])
         self._vmfatedge.addnetwork(["-netdev", "tap,id=net0202,ifname=tap0202",
                                 "-device", "e1000,netdev=net0202,mac=52:54:98:76:02:02"])
+        self._vmfatedge.addnetwork(["-netdev", "tap,id=net0203,ifname=tap0203",
+                                "-device", "e1000,netdev=net0203,mac=52:54:98:76:02:03"])
         pass
 
     def link(self):
