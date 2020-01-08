@@ -7,6 +7,7 @@ ssh to natvm to start gw:
 ssh -p 10001 127.0.0.1
 ping 8.8.8.8
 cd work/sd-wan-env/
+git pull
 sudo python3 nat-env.py start
 sudo python3 nat-env.py link
 
@@ -18,7 +19,7 @@ cd work/sd-wan-env
 sudo python3 thinedge-env.py start
 sudo python3 thinedge-env.py link
 
-add host to thinedge
+add host to thinedge, run in host machine
 sudo python3 sd-wan-env.py addhost tap0102 host
 docker exec -it host_tap0102 /bin/bash
 ping 8.8.8.8
@@ -31,12 +32,13 @@ cd work/sd-wan-env
 sudo python3 fatedge-env.py start
 sudo python3 fatedge-env.py link
 
-add host to fatedge
+add host to fatedge, run it in host machine
 sudo python3 sd-wan-env.py addhost tap0203 host
 docker exec -it host_tap0203 /bin/bash
 ping 8.8.8.8
 
 ------------------------------
+[optional]
 create tunnel
 fatedge:
 sudo python3 tunnel-manual.py fatedge start
@@ -47,7 +49,24 @@ sudo ip route add 172.16.117.0/24 via 10.10.0.1
 
 from host_tap0102 ping 172.16.117.50,
 
+-----------------------------
+[optional]
+connect to controller, for each edge
+for example, fatedge.
+first ssh to fatedge
+cd work
+git clone https://github.com/vewe-richard/sd-wan-edge.git  or git pull
+cd sd-wan-edge and edit config.json and change poll.py sleep time
+sudo apt install python-pip
 
+
+from host_tap0102 ping 172.16.117.50,
+
+
+
+
+
+------------------------------
 Destroy:
 sudo python3 sd-wan-env.py removehost tap0102 host
 sudo python3 sd-wan-env.py removehost tap0203 host
@@ -57,8 +76,6 @@ sudo python3 tunnel-manual.py thinedge|fatedge remove
 
 for thinedge, nat-vm, fatedge
 sudo python3 xxxedge-env.py remove
-
-
 
 sudo python3 sd-wan-env.py remove
 
