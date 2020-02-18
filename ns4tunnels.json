@@ -1,0 +1,10 @@
+[
+  {"namespace": "main", "tap": ["tapmain1:192.168.91.1/24", "tapmain2:192.168.92.1/24"], "tun": ["tunmain1:192.168.81.1/24", "tunmain2:192.168.82.1/24"]},
+  {"namespace": "n101", "tap": ["tap101:192.168.91.101/24"], "tun": ["tun101:192.168.81.101/24"]},
+  {"namespace": "n102", "tap": ["tap102:192.168.91.102/24"], "tun": ["tun102:192.168.81.102/24"]},
+  {"namespace": "n103", "tap": ["tap103:192.168.91.103/24"], "tun": ["tun103:192.168.81.103/24"]},
+
+  {"veth": "veth101", "pname": "vethp101", "namespace": "main", "pnamespace": "n101", "ip": "10.129.101.100/24", "peerip": "10.129.101.99/24"},
+  {"veth": "veth102", "pname": "vethp102", "namespace": "main", "pnamespace": "n102", "ip": "10.129.102.100/24", "peerip": "10.129.102.99/24"},
+  {"veth": "veth103", "pname": "vethp103", "namespace": "main", "pnamespace": "n103", "ip": "10.129.103.100/24", "peerip": "10.129.103.99/24"}
+]
