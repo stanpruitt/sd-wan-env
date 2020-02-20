@@ -3,8 +3,8 @@ import traceback
 import sys
 import subprocess
 
-def loadcfg():
-    with open("ns4tunnels.json") as json_file:
+def loadcfg(cfg):
+    with open(cfg) as json_file:
         data = json.load(json_file)
     nslist = []
     vethlist = []
@@ -50,15 +50,20 @@ def createns(ns):
 
 def createveth(veth):
     run(["ip", "link", "add", veth["veth"], "type", "veth", "peer", "name", veth["pname"]])
-    run(["ip", "link", "set", veth["veth"], "netns", veth["namespace"]])
+    if veth["namespace"]:
+        run(["ip", "link", "set", veth["veth"], "netns", veth["namespace"]])
     run(["ip", "link", "set", veth["pname"], "netns", veth["pnamespace"]])
-    run(["ip", "netns", "exec", veth["namespace"], "ip", "link", "set", veth["veth"], "up"])
-    run(["ip", "netns", "exec", veth["namespace"], "ip", "addr", "add", veth["ip"], "dev", veth["veth"]])
+    if veth["namespace"]:
+        run(["ip", "netns", "exec", veth["namespace"], "ip", "link", "set", veth["veth"], "up"])
+        run(["ip", "netns", "exec", veth["namespace"], "ip", "addr", "add", veth["ip"], "dev", veth["veth"]])
+    else:
+        run(["ip", "link", "set", veth["veth"], "up"])
+        run(["ip", "addr", "add", veth["ip"], "dev", veth["veth"]])
     run(["ip", "netns", "exec", veth["pnamespace"], "ip", "link", "set", veth["pname"], "up"])
     run(["ip", "netns", "exec", veth["pnamespace"], "ip", "addr", "add", veth["peerip"], "dev", veth["pname"]])
 
-def create():
-    nslist, vethlist = loadcfg()
+def create(cfg):
+    nslist, vethlist = loadcfg(cfg)
     for ns in nslist:
         createns(ns)
     for veth in vethlist:
@@ -78,11 +83,11 @@ def destroy():
 if __name__ == "__main__":
     if sys.argv[1] == "create":
         destroy()
-        create()
+        create(sys.argv[2])
     elif sys.argv[1] == "destroy":
         destroy()
     else:
-        print("Usage: ns4tunnels.py create|destroy")
+        print("Usage: ns4tunnels.py create|destroy configfile")
 
 
 
