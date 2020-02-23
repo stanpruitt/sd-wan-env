@@ -1,8 +1,16 @@
+#usage
+# python3 ns4tunnels.py genconfigs ns4virtunnels.json
+# python3 ns4tunnels.py create ns4virtunnels.json
+# python3 ns4tunnels.py start ns4virtunnels.json
+# python3 ns4tunnels.py stop ns4virtunnels.json
+# python3 ns4tunnels.py destroy ns4virtunnels.json
+
 import json
 import traceback
 import sys
 import subprocess
 import time
+import os
 
 def loadcfg(cfg):
     with open(cfg) as json_file:
@@ -21,6 +29,10 @@ def loadcfg(cfg):
 def run(args):
     print(args)
     subprocess.run(args)
+
+def run1(args):
+    print(args)
+
 
 def split(var):
     items = var.split(":")
@@ -90,6 +102,78 @@ def destroy():
             run(["ip", "link", "delete", peer, "type", "veth"])
     pass
 
+def genconfigs(configfile):
+    cfg = {
+      "sn": "00020002",
+      "type": "fatedge",
+      "name": "sz-fatedge",
+      "spec": "baicells-sd-wan-fatedge.hw.v02",
+      "sw": "fatedge.v01",
+      "sms": "127.0.0.1",
+      "smsport": 8080,
+      "publicip": "",
+      "inputport": 11012,
+      "timeout": 6
+    }
+
+    run(["mkdir", "configs"])
+    run(["mkdir", "logs"])
+    nslist, vethlist = loadcfg(configfile)
+    for n in nslist:
+        ns = n["namespace"]
+        if ns[0] != "n" or len(ns) != 4:  # just create configs for these
+            continue
+        cfg["sn"] = "00090" + ns[1:]
+        try:
+            cfg["name"] = n["ename"] + "-" + ns
+        except:
+            cfg["name"] = ns
+        print(cfg)
+        cfg["sms"] = "10.119.0.1"
+        with open("configs/" + ns + ".json", 'w') as json_file:
+            json.dump(cfg, json_file)
+
+def start(cfgfile):
+    nslist, vethlist = loadcfg(cfgfile)
+    splist = []
+    for n in nslist:
+        ns = n["namespace"]
+        if ns[0] != "n" or len(ns) != 4: #just create configs for these
+            continue
+        import pathlib
+
+        print(ns)
+        cfg = (str(pathlib.Path(__file__).parent.absolute()) + "/configs/" + ns + ".json")
+        log = (str(pathlib.Path(__file__).parent.absolute()) + "/logs/" + ns + ".log")
+        '''
+        export PYTHONPATH = "$PWD" && ip netns exec ns python3
+        edgepoll/__main__.py - -config = configs/config101.json --loglevel=10
+        '''
+        env = dict()
+        cwd = "/home/richard/PycharmProjects/sd-wan-edgev2"
+        env["PYTHONPATH"] = cwd
+        args = ["ip", "netns", "exec", ns, "python3", "edgepoll/__main__.py", "--config", cfg, "--loglevel=10", "--log", log]
+        sp = subprocess.Popen(args, cwd=cwd, env=env)
+        splist.append(sp)
+    '''
+    while True:
+        s = input("exit?, Press Y")
+        if len(s) < 1:
+            continue
+        if s[0] == "Y" or s[0] == "y":
+            break
+    for sp in splist:
+        sp.kill()
+    pass
+    '''
+
+def stop(cfg):
+    sp = subprocess.run(["ps", "-ef"], stdout=subprocess.PIPE)
+    for l in sp.stdout.decode().splitlines():
+        if "edgepoll/__main__.py" in l:
+            items = l.split()
+            subprocess.run(["kill", "-9", items[1]])
+
 if __name__ == "__main__":
     if sys.argv[1] == "create":
         destroy()
@@ -97,8 +181,14 @@ if __name__ == "__main__":
         create(sys.argv[2])
     elif sys.argv[1] == "destroy":
         destroy()
+    elif sys.argv[1] == "genconfigs":
+        genconfigs(sys.argv[2])
+    elif sys.argv[1] == "start":
+        start(sys.argv[2])
+    elif sys.argv[1] == "stop":
+        stop(sys.argv[2])
     else:
-        print("Usage: ns4tunnels.py create|destroy configfile")
+        print("Usage: ns4tunnels.py [create | destroy | stop | genconfigs | start] configfile")
 
 
 
