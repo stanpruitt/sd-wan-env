@@ -2,6 +2,7 @@ import json
 import traceback
 import sys
 import subprocess
+import time
 
 def loadcfg(cfg):
     with open(cfg) as json_file:
@@ -70,7 +71,16 @@ def create(cfg):
         createveth(veth)
     pass
 
+    run(["brctl", "addbr", "br-119"])
+    for veth in vethlist:
+        if "10.119.0" in veth["peerip"]:
+            run(["brctl", "addif", "br-119", veth["veth"]])
+    run(["ip", "link", "set", "br-119", "up"])
+    run(["ip", "addr", "add", "10.119.0.1/24", "dev", "br-119"])
+
 def destroy():
+    run(["ip", "link", "set", "br-119", "down"])
+    run(["brctl", "delbr", "br-119"])
     run(["ip", "-all", "netns", "delete"])
     sp = subprocess.run(["ip", "link", "show", "type", "veth"], stdout=subprocess.PIPE)
     for l in sp.stdout.decode().splitlines():
@@ -83,6 +93,7 @@ def destroy():
 if __name__ == "__main__":
     if sys.argv[1] == "create":
         destroy()
+        time.sleep(2)
         create(sys.argv[2])
     elif sys.argv[1] == "destroy":
         destroy()
