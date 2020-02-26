@@ -113,7 +113,8 @@ def genconfigs(configfile):
       "smsport": 8080,
       "publicip": "",
       "inputport": 11012,
-      "timeout": 6
+      "timeout": 6,
+      "map": ""
     }
 
     run(["mkdir", "configs"])
@@ -130,6 +131,9 @@ def genconfigs(configfile):
             cfg["name"] = ns
         print(cfg)
         cfg["sms"] = "10.119.0.1"
+        md = dict()
+        md["eth0"] = "10.119.0." + ns[1:]
+        cfg["map"] = md
         with open("configs/" + ns + ".json", 'w') as json_file:
             json.dump(cfg, json_file)
 
