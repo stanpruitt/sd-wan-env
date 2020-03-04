@@ -49,13 +49,19 @@ def createtuntap(ns, tap):
     else:
         raise
 
-    run(["ip", "netns", "exec", ns, "ip", "tuntap", "add", "mode", mode, name])
-    run(["ip", "netns", "exec", ns, "ip", "link", "set", name, "up"])
-    run(["ip", "netns", "exec", ns, "ip", "addr", "add", ip, "dev", name])
+    if ns:
+        run(["ip", "netns", "exec", ns, "ip", "tuntap", "add", "mode", mode, name])
+        run(["ip", "netns", "exec", ns, "ip", "link", "set", name, "up"])
+        run(["ip", "netns", "exec", ns, "ip", "addr", "add", ip, "dev", name])
+    else:
+        run(["ip", "tuntap", "add", "mode", mode, name])
+        run(["ip", "link", "set", name, "up"])
+        run(["ip", "addr", "add", ip, "dev", name])
 
 def createns(ns):
     nsname = ns["namespace"]
-    run(["ip", "netns", "add", nsname])
+    if nsname:
+        run(["ip", "netns", "add", nsname])
     for tap in ns["tap"]:
         createtuntap(nsname, tap)
     for tun in ns["tun"]:
@@ -82,6 +88,12 @@ def create(cfg):
     for veth in vethlist:
         createveth(veth)
     pass
+
+    for veth in vethlist:
+        if "10.119.0" in veth["peerip"]:
+            break
+    else:
+        return
 
     run(["brctl", "addbr", "br-119"])
     for veth in vethlist:
