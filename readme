@@ -81,6 +81,15 @@ sudo python3 sd-wan-env.py remove
 
 
 
+#test through namespace
+python3 ns4tunnels.py genconfigs ns4virtunnels.json
+python3 ns4tunnels.py create ns4virtunnels.json
+
+sudo ip netns exec n100 bash
+cd /tmp
+mkdir /tmp/n100
+GIT=/home/richard/PycharmProjects/sd-wan-edgev2 && export PYTHONPATH="$GIT" && python3 $GIT/edgepoll/__main__.py --config="/home/richard/PycharmProjects/sd-wan-env/configs/n100.json" --loglevel=10
+...
 
 
 
