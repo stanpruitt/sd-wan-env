@@ -66,6 +66,9 @@ def createns(ns):
         createtuntap(nsname, tap)
     for tun in ns["tun"]:
         createtuntap(nsname, tun)
+    if nsname:
+        run(["ip", "netns", "exec", nsname, "ip", "link", "set", "lo", "up"])
+        run(["ip", "netns", "exec", nsname, "ip", "address", "add", "127.0.0.1/24", "dev", "lo"])
 
 def createveth(veth):
     run(["ip", "link", "add", veth["veth"], "type", "veth", "peer", "name", veth["pname"]])
@@ -124,7 +127,7 @@ def genconfigs(configfile):
       "sms": "127.0.0.1",
       "smsport": 8081,
       "publicip": "",
-      "inputport": 11012,
+      "inputport": 11112,
       "timeout": 6,
       "map": ""
     }

@@ -1,3 +1,27 @@
+#test through namespace
+sudo python3 ns4tunnels.py genconfigs ns4virtunnels.json
+sudo python3 ns4tunnels.py create ns4virtunnels.json
+#sudo python3 ns4tunnels.py destroy ns4virtunnels.json
+
+sudo ip netns exec n100 bash
+cd /tmp
+mkdir /tmp/n100
+
+GIT=/home/richard/PycharmProjects/sd-wan-edgev2 && export PYTHONPATH="$GIT" && python3 $GIT/edgepoll/__main__.py --config="/home/richard/PycharmProjects/sd-wan-env/configs/n100.json" --loglevel=10
+
+# if we want test with testscript/test.py,
+1. poll.py: subprocess.Popen(["python3", "./testscripts/test.py"]),
+2. testscript/test.py need change sn to match
+3. change configs/n100.json, sms to 127.0.0.1
+
+...
+
+
+
+
+
+
+#original test, through virtualmachine
 Start:
 sudo python3 sd-wan-env.py start
 sudo python3 sd-wan-env.py link
@@ -78,19 +102,6 @@ for thinedge, nat-vm, fatedge
 sudo python3 xxxedge-env.py remove
 
 sudo python3 sd-wan-env.py remove
-
-
-
-#test through namespace
-python3 ns4tunnels.py genconfigs ns4virtunnels.json
-python3 ns4tunnels.py create ns4virtunnels.json
-
-sudo ip netns exec n100 bash
-cd /tmp
-mkdir /tmp/n100
-GIT=/home/richard/PycharmProjects/sd-wan-edgev2 && export PYTHONPATH="$GIT" && python3 $GIT/edgepoll/__main__.py --config="/home/richard/PycharmProjects/sd-wan-env/configs/n100.json" --loglevel=10
-...
-
 
 
 

@@ -1,1 +1,1 @@
-{"sn": "00090100", "type": "fatedge", "name": "sz-n100", "spec": "baicells-sd-wan-fatedge.hw.v02", "sw": "fatedge.v01", "sms": "10.119.0.1", "smsport": 8081, "publicip": "", "inputport": 11012, "timeout": 6, "map": {"eth0": "10.119.0.100"}}
+{"sn": "00090100", "type": "fatedge", "name": "sz-n100", "spec": "baicells-sd-wan-fatedge.hw.v02", "sw": "fatedge.v01", "sms": "127.0.0.1", "smsport": 8081, "publicip": "", "inputport": 11112, "timeout": 6, "map": {"eth0": "10.119.0.100"}}
