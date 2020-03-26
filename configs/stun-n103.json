@@ -1,0 +1,1 @@
+[{"entry": "http", "module": "stun", "cmd": "add", "node": "server", "tunortap": "tap", "tunneltype": "ipsec", "port": "5556", "tunnelip": "10.139.27.2"}]
