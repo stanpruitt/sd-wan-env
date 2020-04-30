@@ -1,0 +1,8 @@
+[
+
+  {"namespace": "n100", "tap": [], "tun": []},
+  {"namespace": "n101", "tap": [], "tun": []},
+
+
+  {"veth": "veth100", "pname": "veth101", "namespace": "n100", "pnamespace": "n101", "ip": "10.129.10.100/24", "peerip": "10.129.10.101/24"}
+]

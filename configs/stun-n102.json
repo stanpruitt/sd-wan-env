@@ -1,1 +1,3 @@
-[{"entry": "http", "module": "stun", "cmd": "add", "node": "vpn", "port": "5555", "tunnelip": "10.139.27.100", "server": ["10.119.0.100", "10.119.0.103:5556"]}]
+[{"node": "vpn", "port": "5555", "tunnelip": "10.139.27.101", "tunortap": "tap", "tunneltype": "ipsec",
+  "server":[{"ip":"10.119.0.100", "tunnelip": "10.139.27.1"}, {"ip":"10.119.0.103", "port": "5556", "tunnelip": "10.139.27.2", "allowips": "vpn.cfg"}] }
+]
