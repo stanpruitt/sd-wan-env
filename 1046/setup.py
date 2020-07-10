@@ -25,24 +25,25 @@ class Setup5GRouter:
         out = sp.stdout.decode().strip()
         if "amd64" in out:
             self._root = "/tmp/root/"
-            vpaths = ["/", "/etc/systemd/network/", "/var/run/media/mmcblk0p2/boot/", "/root/.sdwan/edgepoll/", "/etc/sdwan/edge/"]
-            for p in vpaths:
-                sp = subprocess.run(["mkdir", "-p", self._root + p])
-
         else:
             self._root = "/"
+
+        vpaths = ["/", "/etc/systemd/network/", "/var/run/media/mmcblk0p2/boot/", "/root/.sdwan/edgepoll/", "/etc/sdwan/edge/"]
+        for p in vpaths:
+            sp = subprocess.run(["mkdir", "-p", self._root + p])
         pass
 
     def runningUnderGitProjectRootDirectory(self, cwd):
         return os.path.isfile(os.path.join(cwd, "LICENSE"))
 
     def wan(self):
+        sp = subprocess.run(["rm", "-f", self._root + "/etc/systemd/network/fm1-mac6.network"])
         sp = subprocess.run(["rm", "-f", self._root + "/etc/systemd/network/fm1-mac9.network"])
         sp = subprocess.run(["cp", "./1046/fm1-mac9.network", self._root + "/etc/systemd/network/"])
         pass
 
     def git(self):
-        os.chdir(self._root)
+        os.chdir(self._root + "/root")
         if not os.path.isdir("sd-wan-edgev2"):
             sp = subprocess.run(["git", "clone", "https://github.com/vewe-richard/sd-wan-edgev2.git"])
         os.chdir(self._cwd)
@@ -51,6 +52,11 @@ class Setup5GRouter:
     def pypackage(self):
         if os.path.isdir("/tmp/python-pytuntap-1.0.5"):
             return
+        os.chdir("/tmp")
+        sp = subprocess.run(["unzip", self._cwd + "/1046/setuptools-49.1.0.zip"])
+        os.chdir("setuptools-49.1.0")
+        sp = subprocess.run(["python3", "setup.py", "install"])
+
         os.chdir("/tmp")
         sp = subprocess.run(["tar", "xf", self._cwd + "/1046/python-pytuntap-1.0.5.tar.gz"])
         os.chdir("python-pytuntap-1.0.5")
