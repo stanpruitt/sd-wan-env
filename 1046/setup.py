@@ -40,6 +40,7 @@ class Setup5GRouter:
         sp = subprocess.run(["rm", "-f", self._root + "/etc/systemd/network/fm1-mac6.network"])
         sp = subprocess.run(["rm", "-f", self._root + "/etc/systemd/network/fm1-mac9.network"])
         sp = subprocess.run(["cp", "./1046/fm1-mac9.network", self._root + "/etc/systemd/network/"])
+        sp = subprocess.run(["cp", "./1046/fm1-usb0.network", self._root + "/etc/systemd/network/"])
         pass
 
     def git(self):

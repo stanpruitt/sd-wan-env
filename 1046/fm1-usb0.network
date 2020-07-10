@@ -1,0 +1,6 @@
+[Match]
+Name=usb0
+KernelCommandLine=!root=/dev/nfs
+
+[Network]
+DHCP=yes
