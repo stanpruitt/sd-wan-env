@@ -104,4 +104,6 @@ if __name__ == "__main__":
     setup.pypackage()
     setup.kernel()
     setup.edgepoll()
+    print("cd to", setup._root, "/root/sd-wan-edgev2", ",run python3 install.py")
     pass
+
