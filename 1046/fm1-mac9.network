@@ -1,0 +1,6 @@
+[Match]
+Name=fm1-mac9
+KernelCommandLine=!root=/dev/nfs
+
+[Network]
+DHCP=yes
