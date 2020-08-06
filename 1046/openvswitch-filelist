@@ -120,3 +120,8 @@
 /etc/network/if-post-down.d/openvswitch
 /etc/network/if-pre-up.d/openvswitch
 /usr/share/doc/openvswitch-switch/changelog.Debian.gz
+/usr/local/bin/ovs-l3ping
+/usr/local/bin/ovs-test
+/usr/local/bin/ovs-testcontroller
+/usr/local/sbin/ovs-vlan-bug-workaround
+/usr/local/sbin/ovs-vswitchd
